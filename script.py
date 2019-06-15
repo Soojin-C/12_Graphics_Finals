@@ -134,7 +134,6 @@ def run(filename):
         consts = ''
         coords = []
         coords1 = []
-        lights = []
 
         for knob in frame.keys():
             symbols[knob] = frame[knob]
@@ -229,12 +228,6 @@ def run(filename):
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
-            elif c == 'light':
-                cl = command['light']
-                new_light_color = symbols[cl][1]['color']
-                new_light_location = symbols[cl][1]['location']
-                light = [new_light_location, new_light_color]
-                lights.append(light)
             elif c == 'save_coord_system':
                 cs = command['cs']
                 symbols[cs] = stack[-1]

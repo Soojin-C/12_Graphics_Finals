@@ -4,7 +4,6 @@
 Added Additional mdl features:
 * Mesh
 * Save Coordinate System
-* Lighting
 
 Added additional shapes:
 * Triangle

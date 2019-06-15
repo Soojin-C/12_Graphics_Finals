@@ -30,16 +30,8 @@ def get_lighting(normal, view, ambient, light, symbols, reflect ):
     r = symbols[reflect][1]
 
     a = calculate_ambient(ambient, r)
-    d = [0, 0, 0]
-    s = [0, 0, 0]
-
-    for each in range(len(light)):
-        normalize(light[each][LOCATION])
-        diff = calculate_diffuse(light[each], r, n)
-        spec = calculate_specular(light[each], r, view, n)
-        for counter in range(len(diff)):
-            d[counter] += diff[counter]
-            s[counter] += spec[counter]
+    d = calculate_diffuse(light, r, n)
+    s = calculate_specular(light, r, view, n)
 
     i = [0, 0, 0]
     i[RED] = int(a[RED] + d[RED] + s[RED])
