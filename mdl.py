@@ -15,6 +15,8 @@ tokens = (
     "TORUS",
     "SPHERE",
     "BOX",
+    "TRIANGLE",
+    "PYRAMID",
     "LINE",
     "MESH",
     "TEXTURE",
@@ -54,6 +56,8 @@ reserved = {
     "torus" : "TORUS",
     "sphere" : "SPHERE",
     "box" : "BOX",
+    "triangle" : "TRIANGLE",
+    "pyramid" : "PYRAMID",
     "line" : "LINE",
     "mesh" : "MESH",
     "texture" : "TEXTURE",
@@ -213,6 +217,40 @@ def p_command_box(p):
     cmd['args'] = p[arg_start:arg_start+6]
     commands.append(cmd)
 
+def p_command_triangle(p):
+    """command : TRIANGLE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | TRIANGLE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
+               | TRIANGLE SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
+               | TRIANGLE SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    if isinstance(p[2], str):
+        cmd['constants'] = p[2]
+        arg_start = 3
+    if len(p) == 9 and isinstance(p[8], str):
+        cmd['cs'] = p[8]
+    if len(p) == 10 and isinstance(p[9], str):
+          cmd['cs'] = p[9]
+    cmd['args'] = p[arg_start:arg_start+6]
+    commands.append(cmd)
+
+def p_command_pyramid(p):
+    """command : PYRAMID NUMBER NUMBER NUMBER NUMBER NUMBER
+               | PYRAMID NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
+               | PYRAMID SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER
+               | PYRAMID SYMBOL NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL"""
+    cmd = {'op' : p[1], 'constants' : None, 'cs' : None, 'args':[]}
+    arg_start = 2
+    if isinstance(p[2], str):
+        cmd['constants'] = p[2]
+        arg_start = 3
+    if len(p) == 8 and isinstance(p[7], str):
+        cmd['cs'] = p[7]
+    if len(p) == 9 and isinstance(p[8], str):
+          cmd['cs'] = p[8]
+    cmd['args'] = p[arg_start:arg_start+5]
+    commands.append(cmd)
+
 def p_command_line(p):
     """command : LINE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER
                | LINE NUMBER NUMBER NUMBER NUMBER NUMBER NUMBER SYMBOL
@@ -331,20 +369,21 @@ def p_command_generate_rayfiles(p):
     commands.append({'op':p[1], 'args':None})
 
 def p_command_mesh(p):
-    """command : MESH CO TEXT
-               | MESH SYMBOL CO TEXT
-               | MESH CO TEXT SYMBOL
-               | MESH SYMBOL CO TEXT SYMBOL"""
+    """command : MESH TEXT TEXT
+               | MESH CO TEXT TEXT
+               | MESH SYMBOL CO TEXT TEXT
+               | MESH CO TEXT TEXT SYMBOL
+               | MESH SYMBOL CO TEXT TEXT SYMBOL"""
     cmd = {'op':p[1], 'args' : [], 'cs':None, 'constants':None}
-    arg_start = 2
+    arg_start = 3
     if isinstance(p[2], str):
         cmd['constants'] = p[2]
         arg_start+= 1
-    cmd['args'].append(p[arg_start])
-    if len(p) == 4 and isinstance(p[3], str):
-        cmd['cs'] = p[3]
-    if len(p) == 5 and isinstance(p[4], str):
-        cmd['cs'] = p[4]
+    cmd['args'].append(p[arg_start]+p[arg_start+1])
+    if len(p) == 6 and isinstance(p[5], str) and p[2]==":":
+        cmd['cs'] = p[5]
+    if len(p) == 7 and isinstance(p[6], str) and p[3]==":":
+        cmd['cs'] = p[6]
     commands.append(cmd)
 
 def p_save_knobs(p):

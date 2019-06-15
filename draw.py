@@ -129,6 +129,13 @@ def add_box( polygons, x, y, z, width, height, depth ):
     add_polygon(polygons, x1, y, z1, x, y1, z1, x, y, z1)
     add_polygon(polygons, x1, y, z1, x1, y1, z1, x, y1, z1)
 
+    #top
+    add_polygon(polygons, x, y, z1, x1, y, z, x1, y, z1)
+    add_polygon(polygons, x, y, z1, x, y, z, x1, y, z)
+    #bottom
+    add_polygon(polygons, x, y1, z, x1, y1, z1, x1, y1, z)
+    add_polygon(polygons, x, y1, z, x, y1, z1, x1, y1, z1)
+
     #right side
     add_polygon(polygons, x1, y, z, x1, y1, z1, x1, y, z1)
     add_polygon(polygons, x1, y, z, x1, y1, z, x1, y1, z1)
@@ -136,12 +143,93 @@ def add_box( polygons, x, y, z, width, height, depth ):
     add_polygon(polygons, x, y, z1, x, y1, z, x, y, z)
     add_polygon(polygons, x, y, z1, x, y1, z1, x, y1, z)
 
-    #top
-    add_polygon(polygons, x, y, z1, x1, y, z, x1, y, z1)
-    add_polygon(polygons, x, y, z1, x, y, z, x1, y, z)
-    #bottom
-    add_polygon(polygons, x, y1, z, x1, y1, z1, x1, y1, z)
-    add_polygon(polygons, x, y1, z, x, y1, z1, x1, y1, z1)
+def add_triangle(polygons, x, y, z, b, h, l):
+                        #  x, y, z, base, height, length
+    b = b / 2
+    # left
+    x1 = x - b
+    y1 = y - h
+
+    # right
+    x2 = x + b
+    z2 = z - l
+
+    # face1
+    add_polygon(polygons, x, y, z, x1, y1, z, x2, y1, z)
+    # face2 (back)
+    add_polygon(polygons, x, y, z2, x2, y1, z2, x1, y1, z2)
+    # face3 (right)
+    add_polygon(polygons, x, y, z, x2, y1, z2, x, y, z2)
+    add_polygon(polygons, x, y, z, x2, y1, z, x2, y1, z2)
+    # face4 (left)
+    add_polygon(polygons, x, y, z2, x1, y1, z, x, y, z)
+    add_polygon(polygons, x, y, z2, x1, y1, z2, x1, y1, z)
+    # bottom
+    add_polygon(polygons, x1, y1, z, x2, y1, z2, x2, y1, z)
+    add_polygon(polygons, x1, y1, z, x1, y1, z2, x2, y1, z2)
+
+
+def add_pyramid(polygons, x, y, z, height, s):
+    s = s / 2.0
+    b_y = y - height
+    left = x - s
+    right = x + s
+    back = z - s
+    front = z + s
+
+    # face1
+    add_polygon(polygons, x, y, z, left, b_y, front, right, b_y, front)
+    # face2
+    add_polygon(polygons, x, y, z, right, b_y, front, right, b_y, back)
+    # face3
+    add_polygon(polygons, x, y, z, right, b_y, back, left, b_y, back)
+    # face4
+    add_polygon(polygons, x, y, z, left, b_y, back, left, b_y, front)
+    # bottom
+    add_polygon(polygons, left, b_y, front, right, b_y, back, right, b_y, front)
+    add_polygon(polygons, left, b_y, front, left, b_y, back, right, b_y, back)
+
+def add_mesh(polygons, file):
+    v = []
+    f = open(file, 'r')
+    for line in f:
+        line = line.rstrip("\n").split()
+        #print(line)
+        if len(line) <= 1:
+            pass
+        elif line[0] == "v":
+            x = float(line[1])
+            y = float(line[2])
+            z = float(line[3])
+            v.append([x, y, z])
+    f = open(file, 'r')
+    for line in f:
+        line = line.rstrip("\n").split()
+        #print(line)
+        if len(line) <= 1:
+            pass
+        elif line[0] == "f":
+            line = line[1:]
+            counter = 2
+            while counter < len(line):
+                #print(line)
+                p0 = int(line[0]) - 1
+                p1 = int(line[counter - 1]) - 1
+                p2 = int(line[counter]) - 1
+                #print(p0,p1,p2)
+
+                add_polygon(polygons,
+                            v[p0][0],
+                            v[p0][1],
+                            v[p0][2],
+                            v[p1][0],
+                            v[p1][1],
+                            v[p1][2],
+                            v[p2][0],
+                            v[p2][1],
+                            v[p2][2] )
+                counter = counter + 1
+
 
 def add_sphere(polygons, cx, cy, cz, r, step ):
     points = generate_sphere(cx, cy, cz, r, step)

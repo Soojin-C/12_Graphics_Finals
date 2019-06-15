@@ -95,6 +95,9 @@ def run(filename):
         print ("Parsing failed.")
         return
 
+    print("======")
+    print(p)
+
     view = [0,
             0,
             1];
@@ -148,7 +151,11 @@ def run(filename):
                 add_box(tmp,
                         args[0], args[1], args[2],
                         args[3], args[4], args[5])
-                matrix_mult( stack[-1], tmp )
+                if command["cs"] == None:
+                    matrix_mult( stack[-1], tmp )
+                else:
+                    cs = command["cs"]
+                    matrix_mult( symbols[cs], tmp)
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
@@ -157,7 +164,11 @@ def run(filename):
                     reflect = command['constants']
                 add_sphere(tmp,
                            args[0], args[1], args[2], args[3], step_3d)
-                matrix_mult( stack[-1], tmp )
+                if command["cs"] == None:
+                    matrix_mult( stack[-1], tmp )
+                else:
+                    cs = command["cs"]
+                    matrix_mult( symbols[cs], tmp)
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
@@ -166,10 +177,68 @@ def run(filename):
                     reflect = command['constants']
                 add_torus(tmp,
                           args[0], args[1], args[2], args[3], args[4], step_3d)
-                matrix_mult( stack[-1], tmp )
+                if command["cs"] == None:
+                    matrix_mult( stack[-1], tmp )
+                else:
+                    cs = command["cs"]
+                    matrix_mult( symbols[cs], tmp)
                 draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
                 tmp = []
                 reflect = '.white'
+
+
+            elif c == 'pyramid':
+                if command['constants']:
+                    reflect = command['constants']
+                    #x y z height s
+                add_pyramid(tmp, args[0], args[1], args[2], args[3], args[4])
+                if command["cs"] == None:
+                    matrix_mult( stack[-1], tmp )
+                else:
+                    cs = command["cs"]
+                    matrix_mult( symbols[cs], tmp)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                tmp = []
+                reflect = '.white'
+            elif c == 'triangle':
+                if command['constants']:
+                    reflect = command['constants']
+                    #x y z height s
+                add_triangle(tmp, args[0], args[1], args[2], args[3], args[4], args[5])
+                if command["cs"] == None:
+                    matrix_mult( stack[-1], tmp )
+                else:
+                    cs = command["cs"]
+                    matrix_mult( symbols[cs], tmp)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                tmp = []
+                reflect = '.white'
+            elif c == 'mesh':
+                if command['constants']:
+                    reflect = command['constants']
+                if command['cs']:
+                    tmp = []
+                #print(args)
+                add_mesh(tmp, args[0])
+                if command["cs"] == None:
+                    matrix_mult( stack[-1], tmp )
+                else:
+                    cs = command["cs"]
+                    matrix_mult( symbols[cs], tmp)
+                draw_polygons(tmp, screen, zbuffer, view, ambient, light, symbols, reflect)
+                tmp = []
+                reflect = '.white'
+            elif c == 'light':
+                cl = command['light']
+                new_light_color = symbols[cl][1]['color']
+                new_light_location = symbols[cl][1]['location']
+                light = [new_light_location, new_light_color]
+                lights.append(light)
+            elif c == 'save_coord_system':
+                cs = command['cs']
+                symbols[cs] = stack[-1]
+
+
             elif c == 'line':
                 add_edge(tmp,
                          args[0], args[1], args[2], args[3], args[4], args[5])
@@ -186,6 +255,7 @@ def run(filename):
             elif c == 'scale':
                 if command["knob"]:
                     knob_value = symbols[command["knob"]]
+                print(args)
                 tmp = make_scale(args[0] * knob_value, args[1] * knob_value, args[2] * knob_value)
                 matrix_mult(stack[-1], tmp)
                 stack[-1] = [x[:] for x in tmp]
@@ -211,6 +281,7 @@ def run(filename):
                 display(screen)
             elif c == 'save':
                 save_extension(screen, args[0])
+
 
         save_extension(screen, 'anim/' + name + "%03d"%fr)
         fr += 1

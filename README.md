@@ -1,6 +1,11 @@
 # Graphics_Finals
 ## Soojin Choi
 ### Features:
-* Shading
+Added Additional mdl features:
 * Mesh
-* Vary
+* Save Coordinate System
+* Lighting
+
+Added additional shapes:
+* Triangle
+* Pyramid
