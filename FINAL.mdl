@@ -1,13 +1,86 @@
-constants shiny_purple 0.2 0.3 0.7 0.0 0.0 0.0 0.0 0.3 0.7
-constants matte_purple 0.2 0.7 0.3 0.0 0.0 0.0 0.0 0.7 0.3
-//BODY
+// Note: This uses the light values in the provided source code.
+constants shiny_purple 0.3 0.2 0.8 0.3 0 0 0.3 0.2 0.8
+constants shiny_teal 0.3 0.0 0.0 0.3 0.2 0.8 0.3 0.2 0.8
+constants shiny_pink 0.3 0.2 0.8 0.3 0.2 0.8 0.3 0.0 0.8
+constants dull_yellow 0.3 0.8 0.2 0.3 0.8 0.2 0 0 0
+frames 50
+basename final
 push
 move 250 250 0
-save_coord_system origin
-move 0 -40 0
-rotate z 180
-triangle 0 120 0 50 80 20
-rotate z 90
-triangle 0 0 0 50 80 20 origin
-display
-save robot.png
+save_coord_system base
+rotate x 270
+move 0 300 0
+rotate y 100 spin
+scale 7 7 7 grow
+scale 0.5 0.5 0.5
+vary spin 0 49 1 0
+vary grow 0 24 0 1
+vary grow 25 49 1 0
+mesh dull_yellow :flower.obj
+pop
+push
+move 125 300 -20
+rotate y 90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_teal 0 0 0 20 5
+pop
+push
+move 20 40 20
+rotate y -90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_purple 0 0 0 20 5
+pop
+push
+move 475 10 20
+rotate y 90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_teal 0 0 0 20 5
+pop
+push
+move 275 60 -10
+rotate y -90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_purple 0 0 0 20 5
+pop
+push
+move 485 370 20
+rotate y 90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_teal 0 0 0 20 5
+pop
+push
+move 330 290 20
+rotate y -90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_purple 0 0 0 20 5
+pop
+push
+move 310 490 -20
+rotate y 90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_teal 0 0 0 20 5
+pop
+push
+move 23 480 20
+rotate y -90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_purple 0 0 0 20 5
+pop
+push
+move 415 125 -20
+rotate y 90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_pink 0 0 0 20 5
+pop
+push
+move 200 400 20
+rotate y -90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_pink 0 0 0 20 5
+pop
+push
+move 74 100 -20
+rotate y -90 cycle
+vary cycle 0 49 0 1
+pyramid shiny_pink 0 0 0 20 5
+pop
