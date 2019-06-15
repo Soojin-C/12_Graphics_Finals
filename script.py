@@ -134,6 +134,7 @@ def run(filename):
         consts = ''
         coords = []
         coords1 = []
+        lights = []
 
         for knob in frame.keys():
             symbols[knob] = frame[knob]
